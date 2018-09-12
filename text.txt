@@ -1,0 +1,85 @@
+http://mongodb.github.io/node-mongodb-native/2.2/quick-start/quick-start/
+安装mongodb模块
+    cnpm install mongodb --save
+引入
+    var MongoClient = require('mongodb').MongoClient;
+    var dbUrl = "mongodb://localhost:27017/productmanage";
+连接数据库，查询数据
+    MongoClient.connect(dbUrl, function(err, client) {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+        var db = client.db('productmanage');  //productmanage数据库名
+        var database = db.collection('user').find(req.body); //req.body是body-parser中间件获取post提交的数据
+        var list = [];
+        
+        database.toArray(function(err, data) {
+            console.log(data);
+            if (data.length > 0) {
+                console.log('登录成功');
+                res.redirect('/product'); //跳转到商品列表
+            } else {
+                console.log('登录失败');
+                res.send("<script>alert('登录失败');location.href='/login';</script>")
+            }
+            client.close();
+        })
+    })
+
+express-session
+    安装
+        cnpm install express-session --save
+    引入
+        var session=require('express-session')
+    配置
+        app.use(session({
+            secret: 'keyboard cat',
+            resave: false,
+            saveUninitialized: true,
+            cookie: {
+                maxAge: 1000 * 60 * 30
+            },
+            rolling: true
+        }))
+    设置session
+        req.session.userinfo = data[0];
+    //销毁session
+        req.session.destroy(function(err) {
+            if (err) {
+                console.log(err)
+            } else {
+                res.redirect('/login')
+            }
+        })
+
+md5-node
+    安装 cnpm install md5-node --save
+    引入
+        var md5=require('md5-node')
+    加密数据
+        md5('123456');
+
+封装操作数据库方法
+    db.js
+
+multiparty使用
+    上传图片/获取表单数据
+    安装
+        cnpm install multiparty --save
+    引入
+        var multiparty=require('multiparty');
+    上传图片的地方使用
+        var form=new multiparty.Form();
+        //form.uploadDir='upload'  图片上传保存的地址
+        form.parse(req,function(err,fields,files){
+            //获取提交的数据以及图片上传成功返回的图片信息
+
+        })
+        html页面form表单要加入enctype="multipart/form-data"
+
+获取数据库中的自增长id
+    var ObjectID = require('mongodb').ObjectID;
+    使用
+        new DB.ObjectID(id)
+
