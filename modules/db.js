@@ -45,11 +45,13 @@ exports.insert = function(collectionname, json, callback) {
 //修改数据
 exports.update = function(collectionname, json1, json2, callback) {
     __connectDb(function(client) {
-        db.collection(collectionname).update(json1, { $set: json2 }, function(error, data) {
+        db.collection(collectionname).updateOne(json1, { $set: json2 }, function(error, data) {
             callback(error, data)
         })
     })
 }
+
+
 
 //删除数据
 exports.deleteOne = function(collectionname, json, callback) {
